@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-http="http://www.springframework.org/schema/integration/http"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
+
+	<int:channel id="input" />
+	<int:channel id="output" />
+
+	<int:channel id="dateenrich" />
+	<int:channel id="stationsChannel" />
+
+	<int:header-enricher input-channel="input"
+		output-channel="dateenrich">
+		<int:header name="observationtime"
+			expression="@dateCreator.create(${measurementStamp:#{null}})" />
+	</int:header-enricher>
+
+	<bean id="dateCreator"
+		class="de.i3mainz.actonair.springframework.uba.creators.DateCreator" />
+
+	<beans profile="use-all-station">
+		<int:bridge input-channel="dateenrich" output-channel="stationsChannel" />
+	</beans>
+	<beans profile="use-filtered-station">
+		<int:channel id="inputSplitter" />
+		<int:header-enricher input-channel="dateenrich"
+			output-channel="inputSplitter">
+			<int:header name="station"
+				expression="@stationEnricher.addStations(${stationFilter})" />
+		</int:header-enricher>
+		<bean id="stationEnricher"
+			class="de.i3mainz.actonair.springframework.xd.modules.uba.integration.transformer.StationHeaderEnricher">
+			<constructor-arg name="ds" ref="stationDataStore" />
+		</bean>
+		<int:splitter input-channel="inputSplitter"
+			output-channel="stationsChannel">
+			<bean
+				class="de.i3mainz.actonair.springframework.xd.modules.uba.integration.splitter.StationsHeaderSplitter" />
+		</int:splitter>
+	</beans>
+	<beans>
+		<int:chain id="uba-luftbelastungs-api" input-channel="stationsChannel"
+			output-channel="meta">
+			<int-http:outbound-gateway url-expression="@urlCreator.getURL()"
+				http-method="GET" expected-response-type='byte[]' charset='UTF-8'
+				reply-timeout='${replyTimeout:5000}'>
+				<int-http:uri-variable name="datum"
+					expression="headers['observationtime'].format(T(java.time.format.DateTimeFormatter).ofPattern('yyyyMMdd'))" />
+				<int-http:uri-variable name="hour"
+					expression="headers['observationtime'].format(T(java.time.format.DateTimeFormatter).ofPattern('HH'))" />
+				<int-http:uri-variable name="station"
+					expression="headers['station']" />
+			</int-http:outbound-gateway>
+		</int:chain>
+
+		<bean id="urlCreator"
+			class="de.i3mainz.actonair.springframework.uba.creators.URLCreator">
+			<property name="pollutant" value="${pollutant}" />
+			<property name="valueType" value="${valueType}" />
+			<property name="stateCode" value="${stateCode:#{null}}" />
+			<property name="readAll" value="${readAll}" />
+		</bean>
+
+		<int:channel id="transform" />
+		<int:channel id="json" />
+		<int:channel id="splitter" />
+		<int:channel id="meta" />
+
+		<int:header-enricher input-channel="meta"
+			output-channel="transform">
+			<int:header name="pollutant" value="${pollutant}" />
+			<int:header name="valueType" value="${valueType}" />
+		</int:header-enricher>
+
+		<!-- <bean id="stationmanager" -->
+		<!-- class="de.i3mainz.actonair.springframework.xd.modules.uba.StationManager" 
+			/> -->
+
+		<bean id="stationDataStore"
+			class="de.i3mainz.actonair.springframework.uba.spatial.UBAStationsDataStore">
+			<constructor-arg name="creator" ref="urlCreator" />
+		</bean>
+
+		<bean id="mapper" class="com.fasterxml.jackson.dataformat.csv.CsvMapper" />
+
+		<int:transformer input-channel="transform"
+			output-channel="splitter">
+			<bean
+				class="de.i3mainz.actonair.springframework.xd.modules.uba.integration.transformer.CSVTransformer">
+				<constructor-arg name="mapper" ref="mapper" />
+				<constructor-arg name="deserializer">
+					<bean
+						class="de.i3mainz.actonair.springframework.uba.model.json.deserialize.ObservationDeserializer" />
+				</constructor-arg>
+			</bean>
+		</int:transformer>
+	</beans>
+
+	<beans profile="use-splitter">
+		<int:channel id="filter" />
+
+		<int:splitter input-channel="splitter" output-channel="filter" />
+
+		<beans profile="use-filter">
+			<int:filter input-channel="filter" output-channel="json"
+				expression="${filter}" />
+		</beans>
+
+		<beans profile="dont-use-filter">
+			<int:bridge input-channel="filter" output-channel="json" />
+		</beans>
+	</beans>
+
+	<beans profile="dont-use-splitter">
+		<beans profile="use-all-station">
+			<int:bridge input-channel="splitter" output-channel="json" />
+		</beans>
+		<beans profile="use-filtered-station">
+			<int:aggregator input-channel="splitter"
+				output-channel="json" />
+		</beans>
+	</beans>
+
+	<beans>
+		<int:chain input-channel="json" output-channel="output">
+			<int:object-to-json-transformer/>
+			<int:header-enricher id="serviceIDEnricher" default-overwrite="true">
+				<int:header name="SensorService" value="UBA-Luftdaten" />
+			</int:header-enricher>
+		</int:chain>
+	</beans>
+
+</beans>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="stationDataStore"
+		class="de.i3mainz.actonair.springframework.uba.spatial.UBAStationsDataStore">
+		<constructor-arg name="url"
+			value="http://www.umweltbundesamt.de/luftdaten/stations/locations?pollutant=PM1&amp;data_type=1TMW&amp;date=20150901" />
+	</bean>
+</beans>
