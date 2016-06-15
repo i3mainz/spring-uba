@@ -41,7 +41,7 @@ integTest{
 
 dependencies {
 	compile project (':spring-uba-core')
-    compile ("org.springframework.cloud.stream.app:app-starters-common:${springCloudStreamVersion}")
+    compile('org.springframework.cloud.stream.app:app-starters-annotation-common')
     optional('org.springframework.boot:spring-boot-configuration-processor')
     compile('org.springframework.integration:spring-integration-core')
     compile('org.springframework.integration:spring-integration-http')

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.i3mainz.actonair.springframework.cloud.stream.app.uba.processor.integration.splitter;
+package org.springframework.cloud.stream.app.uba.processor.integration.splitter;
 
 import java.util.ArrayList;
 import java.util.Iterator;

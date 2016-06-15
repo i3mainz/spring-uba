@@ -1,4 +1,4 @@
-package de.i3mainz.actonair.springframework.cloud.stream.app.uba.processor;
+package org.springframework.cloud.stream.app.uba.processor;
 
 import javax.validation.constraints.Pattern;
 
@@ -10,7 +10,7 @@ import lombok.Data;
 
 @ConfigurationProperties(prefix = "ubasensors")
 @Data
-public class UBAProcessorProperties {
+public class UbaProcessorProperties {
 
     private Pollutant pollutant = Pollutant.PM1;
     private DataType valueType = DataType.Tagesmittel;

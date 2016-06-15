@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.i3mainz.actonair.springframework.cloud.stream.app.uba.processor;
+package org.springframework.cloud.stream.app.uba.processor;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -13,6 +13,7 @@ import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.cloud.stream.annotation.Bindings;
+import org.springframework.cloud.stream.app.uba.processor.UbaProcessorConfiguration;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.cloud.stream.test.binder.MessageCollector;
 import org.springframework.messaging.Message;
@@ -22,8 +23,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import de.i3mainz.actonair.springframework.cloud.stream.app.uba.processor.UBAProcessorConfiguration;
-
 /**
  * Some nice integration tests UBA processor
  * 
@@ -31,20 +30,20 @@ import de.i3mainz.actonair.springframework.cloud.stream.app.uba.processor.UBAPro
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = UBAProcessorIntegrationTests.UBAProcessorApplication.class)
+@SpringApplicationConfiguration(classes = UbaProcessorIntegrationTests.UBAProcessorApplication.class)
 @IntegrationTest("{server.port=-1}")
 @DirtiesContext
-public abstract class UBAProcessorIntegrationTests {
+public abstract class UbaProcessorIntegrationTests {
 
     @Autowired
-    @Bindings(UBAProcessorConfiguration.class)
+    @Bindings(UbaProcessorConfiguration.class)
     protected Processor processor;
 
     @Autowired
     protected MessageCollector messageCollector;
 
     @WebIntegrationTest({ "ubasensors.measurementStamp='-1D'", "ubasensors.filterStations=false" })
-    public static class TestUBAStandardRequest extends UBAProcessorIntegrationTests {
+    public static class TestUBAStandardRequest extends UbaProcessorIntegrationTests {
         
         @Test
         public void testInsert() throws JsonProcessingException {

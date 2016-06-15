@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.i3mainz.actonair.springframework.cloud.stream.app.uba.processor;
+package org.springframework.cloud.stream.app.uba.processor;
 
 import java.io.IOException;
 
@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.stream.annotation.EnableBinding;
+import org.springframework.cloud.stream.app.uba.processor.integration.splitter.StationsHeaderSplitter;
+import org.springframework.cloud.stream.app.uba.processor.integration.transformer.CSVTransformer;
+import org.springframework.cloud.stream.app.uba.processor.integration.transformer.StationHeaderEnricher;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,9 +26,6 @@ import org.springframework.messaging.MessageChannel;
 
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 
-import de.i3mainz.actonair.springframework.cloud.stream.app.uba.processor.integration.splitter.StationsHeaderSplitter;
-import de.i3mainz.actonair.springframework.cloud.stream.app.uba.processor.integration.transformer.CSVTransformer;
-import de.i3mainz.actonair.springframework.cloud.stream.app.uba.processor.integration.transformer.StationHeaderEnricher;
 import de.i3mainz.actonair.springframework.uba.creators.DateCreator;
 import de.i3mainz.actonair.springframework.uba.creators.URLCreator;
 import de.i3mainz.actonair.springframework.uba.model.json.deserialize.ObservationDeserializer;
@@ -36,12 +36,12 @@ import de.i3mainz.actonair.springframework.uba.spatial.UBAStationsDataStore;
  *
  */
 @Configuration
-@EnableConfigurationProperties(value = { UBAProcessorProperties.class })
+@EnableConfigurationProperties(value = { UbaProcessorProperties.class })
 @EnableBinding(Processor.class)
-public class UBAProcessorConfiguration {
+public class UbaProcessorConfiguration {
 
     @Autowired
-    private UBAProcessorProperties properties;
+    private UbaProcessorProperties properties;
 
     @Bean
     public MessageChannel dateenrich() {

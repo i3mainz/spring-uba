@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.i3mainz.actonair.springframework.cloud.stream.app.uba.processor.integration.transformer;
+package org.springframework.cloud.stream.app.uba.processor.integration.transformer;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
