@@ -27,7 +27,7 @@ apply plugin: 'de.i3mainz.spring-xd-module'
 mainClassName=''
 
 dependencies {
-    compile project(':spring-uba-core')
+    compile project(':spring-uba-integration-core')
     provided "org.geotools:gt-geojson:$geotoolsVersion"
     provided "org.geotools:gt-data:$geotoolsVersion"
 }

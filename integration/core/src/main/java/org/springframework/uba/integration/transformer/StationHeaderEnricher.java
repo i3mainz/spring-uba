@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.springframework.cloud.stream.app.uba.processor.integration.transformer;
+package org.springframework.uba.integration.transformer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ import de.i3mainz.actonair.springframework.uba.spatial.UBAStationsDataStore;
  */
 public class StationHeaderEnricher {
 
-    static final Logger logger = LoggerFactory.getLogger(StationHeaderEnricher.class);
+    static final Logger LOG = LoggerFactory.getLogger(StationHeaderEnricher.class);
 
     private SimpleFeatureSource fs;
     private FilterFactory2 ff;
@@ -61,8 +61,7 @@ public class StationHeaderEnricher {
             try {
                 filterpolygon = new WKTReader().read(polygon.toString());
             } catch (ParseException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                LOG.error("Cannot parse the string as WKT", e);
             }
         }
         if (filterpolygon != null) {
@@ -74,10 +73,10 @@ public class StationHeaderEnricher {
                 filteredFeatures = fs.getFeatures(andFilter);
 
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error("Can't access features.", e);
             }
             if (filteredFeatures != null) {
-                logger.info("Anzahl Features: " + filteredFeatures.size());
+                LOG.debug("Anzahl Features: " + filteredFeatures.size());
                 SimpleFeatureIterator itr = filteredFeatures.features();
                 while (itr.hasNext()) {
                     result.add(itr.next().getID());

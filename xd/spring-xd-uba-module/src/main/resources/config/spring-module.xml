@@ -33,13 +33,13 @@
 				expression="@stationEnricher.addStations(${stationFilter})" />
 		</int:header-enricher>
 		<bean id="stationEnricher"
-			class="de.i3mainz.actonair.springframework.xd.modules.uba.integration.transformer.StationHeaderEnricher">
+			class="org.springframework.uba.integration.transformer.StationHeaderEnricher">
 			<constructor-arg name="ds" ref="stationDataStore" />
 		</bean>
 		<int:splitter input-channel="inputSplitter"
 			output-channel="stationsChannel">
 			<bean
-				class="de.i3mainz.actonair.springframework.xd.modules.uba.integration.splitter.StationsHeaderSplitter" />
+				class="org.springframework.uba.integration.splitter.StationsHeaderSplitter" />
 		</int:splitter>
 	</beans>
 	<beans>
@@ -90,7 +90,7 @@
 		<int:transformer input-channel="transform"
 			output-channel="splitter">
 			<bean
-				class="de.i3mainz.actonair.springframework.xd.modules.uba.integration.transformer.CSVTransformer">
+				class="org.springframework.uba.integration.transformer.CSVTransformer">
 				<constructor-arg name="mapper" ref="mapper" />
 				<constructor-arg name="deserializer">
 					<bean

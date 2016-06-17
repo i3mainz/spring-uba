@@ -1,0 +1,4 @@
+dependencies {
+	compile project (':spring-uba-core')
+	compile('org.springframework.integration:spring-integration-core:4.2.5.RELEASE')
+}

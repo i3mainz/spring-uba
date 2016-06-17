@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.i3mainz.actonair.springframework.xd.modules.uba.integration.splitter;
+package org.springframework.uba.integration.splitter;
 
 import java.util.ArrayList;
 import java.util.Iterator;

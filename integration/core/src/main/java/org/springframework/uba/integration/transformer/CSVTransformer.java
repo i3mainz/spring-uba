@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.springframework.cloud.stream.app.uba.processor.integration.transformer;
+package org.springframework.uba.integration.transformer;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.integration.annotation.Transformer;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -26,6 +28,8 @@ import de.i3mainz.actonair.springframework.uba.model.Observation;
  *
  */
 public class CSVTransformer {
+    
+    private static final Logger LOG = LoggerFactory.getLogger(CSVTransformer.class);
 
     private CsvMapper mapper;
     private CsvSchema schema;
@@ -40,8 +44,8 @@ public class CSVTransformer {
     @Transformer
     public List<Observation> transform(@Payload byte[] payload,
             @Header("observationtime") ZonedDateTime observationTime) throws Exception {
-        MappingIterator<Observation> it = mapper.readerFor(clazz).with(schema).readValues(payload);
-        List<Observation> result = new ArrayList<Observation>();
+        MappingIterator<Observation> it = mapper.reader(clazz).with(schema).readValues(payload);
+        List<Observation> result = new ArrayList<>();
 
         while (it.hasNextValue()) {
             try {
@@ -49,6 +53,7 @@ public class CSVTransformer {
                 observ.setDatum(GregorianCalendar.from(observationTime).getTime());
                 result.add(observ);
             } catch (IOException e) {
+                LOG.warn("IOException beim Datum setzen! Bearbeite nächstes Element");
                 continue;
             }
         }
