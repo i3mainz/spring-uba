@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
 	xmlns:int-http="http://www.springframework.org/schema/integration/http"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http.xsd
@@ -127,8 +126,9 @@
 
 	<beans>
 		<int:chain input-channel="json" output-channel="output">
-			<int:object-to-json-transformer/>
-			<int:header-enricher id="serviceIDEnricher" default-overwrite="true">
+			<int:object-to-json-transformer />
+			<int:header-enricher id="serviceIDEnricher"
+				default-overwrite="true">
 				<int:header name="SensorService" value="UBA-Luftdaten" />
 			</int:header-enricher>
 		</int:chain>
