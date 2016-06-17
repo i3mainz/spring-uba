@@ -19,7 +19,7 @@ public class StationsHeaderSplitter {
 
     @Splitter
     public List<Message<?>> split(Message<?> message) {
-        List<Message<?>> result = new ArrayList<Message<?>>();
+        List<Message<?>> result = new ArrayList<>();
         MessageBuilder<?> builder = MessageBuilder.fromMessage(message);
         Iterator<String> itr = ((List<String>) message.getHeaders().get("station")).iterator();
         while (itr.hasNext()) {

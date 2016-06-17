@@ -59,7 +59,7 @@ public class ObservationDeserializer extends JsonDeserializer<Observation> {
             throw new JsonMappingException("Cannot load value");
         }
 
-        int value = new Integer(valStringArray[0]);
+        int value = Integer.parseInt(valStringArray[0]);
         observation.setStationId(stationID);
 
         observation.setPosition(createGeoJSON(stationID, title, state, lat, lon));

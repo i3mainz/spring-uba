@@ -19,9 +19,9 @@ import de.i3mainz.actonair.springframework.uba.enums.Pollutant;
  */
 public class URLCreator implements InitializingBean {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(URLCreator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(URLCreator.class);
 
-    private final String BASE_URL = "http://www.umweltbundesamt.de/luftdaten";
+    private static final String BASEURL = "http://www.umweltbundesamt.de/luftdaten";
     private Pollutant pollutant;
     private DataType valueType;
     private String stateCode;
@@ -81,7 +81,7 @@ public class URLCreator implements InitializingBean {
             builder2.append("station=");
             builder2.append("{station}");
         }
-        LOGGER.debug(builder2.toString());
+        LOG.debug(builder2.toString());
         return builder2.toString();
     }
 
@@ -92,14 +92,14 @@ public class URLCreator implements InitializingBean {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, -1);
         builder2.append(new SimpleDateFormat("yyyyMMdd").format(cal.getTime()));
-        LOGGER.debug("DS-URL: "+builder2.toString());
+        LOG.debug("DS-URL: "+builder2.toString());
         return builder2.toString();
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
 
-        builder.append(BASE_URL);
+        builder.append(BASEURL);
         builder.append("/stations/");
         builder.append("locations");
         builder.append("?");

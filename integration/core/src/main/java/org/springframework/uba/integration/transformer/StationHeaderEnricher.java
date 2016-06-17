@@ -31,7 +31,7 @@ import de.i3mainz.actonair.springframework.uba.spatial.UBAStationsDataStore;
  */
 public class StationHeaderEnricher {
 
-    static final Logger LOG = LoggerFactory.getLogger(StationHeaderEnricher.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StationHeaderEnricher.class);
 
     private SimpleFeatureSource fs;
     private FilterFactory2 ff;
@@ -50,7 +50,7 @@ public class StationHeaderEnricher {
     }
 
     public List<String> addStations(Object polygon) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         Geometry filterpolygon = null;
         if (polygon instanceof double[]) {
             filterpolygon = builder.point(((double[]) polygon)[0], ((double[]) polygon)[1])

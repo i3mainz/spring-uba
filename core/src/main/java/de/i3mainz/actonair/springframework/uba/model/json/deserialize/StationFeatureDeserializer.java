@@ -41,7 +41,7 @@ public class StationFeatureDeserializer extends JsonDeserializer<SimpleFeature> 
         String stationsID = node.get("stationCode").textValue();
 
         builder.add(stationsID);
-        List<String> pollution = new ArrayList<String>();
+        List<String> pollution = new ArrayList<>();
         pollution.add("PM1");
         builder.add(pollution);
         double lat = node.get("lat").asDouble();

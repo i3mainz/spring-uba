@@ -6,7 +6,6 @@ package de.i3mainz.actonair.springframework.uba.spatial;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.geotools.data.Query;
 import org.geotools.data.store.ContentDataStore;
@@ -68,10 +67,10 @@ public class UBAStationsDataStore extends ContentDataStore {
         return new UBAStationsFeatureSource(entry, Query.ALL);
     }
 
-    public SimpleFeature getStation(String fid) throws NoSuchElementException, IOException {
+    public SimpleFeature getStation(String fid) throws IOException {
         FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
         Filter filter = ff.id(ff.featureId(fid));
-        return (SimpleFeature) getFeatureSource(getTypeNames()[0]).getFeatures(filter).features().next();
+        return getFeatureSource(getTypeNames()[0]).getFeatures(filter).features().next();
     }
 
 }

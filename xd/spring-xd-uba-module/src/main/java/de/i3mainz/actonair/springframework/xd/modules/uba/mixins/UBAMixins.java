@@ -23,8 +23,6 @@ public final class UBAMixins {
     private UBAMixins() {
     }
 
-
-
     public static class UBADataMixin {
 
         private Pollutant pollutant = Pollutant.PM1;
@@ -68,23 +66,18 @@ public final class UBAMixins {
             case PM1:
                 return valueType.equals(DataType.Tagesmittel);
             case CO:
-                return valueType.equals(DataType.AchtStundenMittel)
-                        || valueType.equals(DataType.AchtStundenTagesMax);
+                return valueType.equals(DataType.AchtStundenMittel) || valueType.equals(DataType.AchtStundenTagesMax);
             case O3:
-                return valueType.equals(DataType.AchtStundenMittel)
-                        || valueType.equals(DataType.AchtStundenTagesMax)
-                        || valueType.equals(DataType.EinStundenMittel)
-                        || valueType.equals(DataType.EinStundenTagesMax);
+                return valueType.equals(DataType.AchtStundenMittel) || valueType.equals(DataType.AchtStundenTagesMax)
+                        || valueType.equals(DataType.EinStundenMittel) || valueType.equals(DataType.EinStundenTagesMax);
             case SO2:
-                return valueType.equals(DataType.Tagesmittel)
-                        || valueType.equals(DataType.EinStundenMittel)
+                return valueType.equals(DataType.Tagesmittel) || valueType.equals(DataType.EinStundenMittel)
                         || valueType.equals(DataType.EinStundenTagesMax);
             case NO2:
-                return valueType.equals(DataType.EinStundenMittel)
-                        || valueType.equals(DataType.EinStundenTagesMax);
+                return valueType.equals(DataType.EinStundenMittel) || valueType.equals(DataType.EinStundenTagesMax);
+            default:
+                return false;
             }
-
-            return false;
         }
     }
 
@@ -113,7 +106,7 @@ public final class UBAMixins {
         public String getStateCode() {
             return this.stateCode;
         }
-        
+
     }
 
 }
