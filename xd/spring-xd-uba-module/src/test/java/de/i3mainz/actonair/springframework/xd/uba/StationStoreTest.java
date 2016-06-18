@@ -35,7 +35,7 @@ import de.i3mainz.actonair.springframework.uba.spatial.UBAStationsDataStore;
 @ContextConfiguration(locations = { "classpath:applicationContext.xml" })
 public class StationStoreTest {
 
-    static final Logger logger = LoggerFactory.getLogger(StationStoreTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StationStoreTest.class);
 
     @Autowired
     private UBAStationsDataStore ds;
@@ -51,8 +51,8 @@ public class StationStoreTest {
             FeatureCollection<SimpleFeatureType, SimpleFeature> collection = fs.getFeatures(query);
             bounds = collection.getBounds();
         }
-        logger.info("The features are contained within " + bounds);
-        logger.info("Anzahl Features: " + fs.getCount(query));
+        LOG.info("The features are contained within " + bounds);
+        LOG.info("Anzahl Features: " + fs.getCount(query));
 
         FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
         String geometryPropertyName = schema.getGeometryDescriptor().getLocalName();
@@ -63,10 +63,10 @@ public class StationStoreTest {
         Polygon polygon = (Polygon) point.buffer(.05);
         Filter filter = ff.intersects(ff.property(geometryPropertyName), ff.literal(polygon));
         SimpleFeatureCollection filteredFeatures = fs.getFeatures(filter);
-        logger.info("Anzahl gefilteter Features: " + filteredFeatures.size());
+        LOG.info("Anzahl gefilteter Features: " + filteredFeatures.size());
         SimpleFeatureIterator itr = filteredFeatures.features();
         while (itr.hasNext()) {
-            logger.info(((Geometry) itr.next().getDefaultGeometry()).toText());
+            LOG.info(((Geometry) itr.next().getDefaultGeometry()).toText());
         }
     }
 
