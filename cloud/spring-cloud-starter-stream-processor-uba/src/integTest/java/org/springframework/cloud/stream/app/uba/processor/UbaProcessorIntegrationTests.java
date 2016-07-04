@@ -44,19 +44,17 @@ public abstract class UbaProcessorIntegrationTests {
 
     @WebIntegrationTest({ "ubasensors.measurementStamp='-1D'", "ubasensors.filterStations=false" })
     public static class TestUBAStandardRequest extends UbaProcessorIntegrationTests {
-        
+
         @Test
         public void testInsert() throws JsonProcessingException {
-            System.out.println("Hallo");
             processor.input().send(new GenericMessage<String>("Hallo Welt"));
             BlockingQueue<Message<?>> messages = messageCollector.forChannel(processor.output());
-            System.out.println(messages.size());
-            messages.forEach(m -> System.out.println(m.getPayload()));
+            messages.stream().map(Message::getPayload).forEach(System.out::println);
         }
     }
-    
+
     @SpringBootApplication
-    public static class UBAProcessorApplication{
-        
+    public static class UBAProcessorApplication {
+
     }
 }
