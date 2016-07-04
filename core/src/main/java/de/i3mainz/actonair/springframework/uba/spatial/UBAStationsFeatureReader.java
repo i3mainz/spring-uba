@@ -20,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
@@ -41,14 +40,15 @@ public class UBAStationsFeatureReader implements FeatureReader<SimpleFeatureType
     private List<SimpleFeature> features;
     private ListIterator<SimpleFeature> featureIterator;
 
-    public UBAStationsFeatureReader(ContentState state, Query query) throws JsonProcessingException, IOException {
+    public UBAStationsFeatureReader(ContentState state, Query query) throws IOException {
         this.state = state;
         builder = new SimpleFeatureBuilder(state.getFeatureType());
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new ByteArrayHttpMessageConverter());
 
-        ResponseEntity<byte[]> response = restTemplate.exchange(((UBAStationsDataStore) this.state.getEntry().getDataStore()).getUrl(),
-                HttpMethod.GET, null, byte[].class);
+        ResponseEntity<byte[]> response = restTemplate.exchange(
+                ((UBAStationsDataStore) this.state.getEntry().getDataStore()).getUrl(), HttpMethod.GET, null,
+                byte[].class);
 
         if (response.getStatusCode().equals(HttpStatus.OK)) {
             CsvMapper mapper = new CsvMapper();

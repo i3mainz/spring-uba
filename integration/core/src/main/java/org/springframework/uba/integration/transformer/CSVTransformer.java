@@ -12,9 +12,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.annotation.Transformer;
+import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -28,7 +30,7 @@ import de.i3mainz.actonair.springframework.uba.model.Observation;
  *
  */
 public class CSVTransformer {
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(CSVTransformer.class);
 
     private CsvMapper mapper;
@@ -43,20 +45,23 @@ public class CSVTransformer {
 
     @Transformer
     public List<Observation> transform(@Payload byte[] payload,
-            @Header("observationtime") ZonedDateTime observationTime) throws Exception {
-        MappingIterator<Observation> it = mapper.reader(clazz).with(schema).readValues(payload);
+            @Header("observationtime") ZonedDateTime observationTime) {
+        MappingIterator<Observation> it;
+        try {
+            it = mapper.reader(clazz).with(schema).readValues(payload);
+        } catch (JsonProcessingException e1) {
+            LOG.error("Can't process payload!" + payload);
+            throw new MessagingException("Can't process payload", e1);
+        } catch (IOException e1) {
+            LOG.error("Can't access payload!" + payload);
+            throw new MessagingException("Can't access payload", e1);
+        }
         List<Observation> result = new ArrayList<>();
 
-        while (it.hasNextValue()) {
-            try {
-                Observation observ = it.nextValue();
-                observ.setDatum(GregorianCalendar.from(observationTime).getTime());
-                result.add(observ);
-            } catch (IOException e) {
-                LOG.warn("IOException beim Datum setzen! Bearbeite nächstes Element");
-                continue;
-            }
-        }
+        it.forEachRemaining(observ -> {
+            observ.setDatum(GregorianCalendar.from(observationTime).getTime());
+            result.add(observ);
+        });
         return result;
     }
 }

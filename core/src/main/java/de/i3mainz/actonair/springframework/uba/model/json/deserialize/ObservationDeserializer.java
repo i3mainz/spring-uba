@@ -86,7 +86,7 @@ public class ObservationDeserializer extends JsonDeserializer<Observation> {
         return writer.toString();
     }
 
-    private SimpleFeatureType buildFeatureType() throws IOException {
+    private static SimpleFeatureType buildFeatureType() {
         SimpleFeatureTypeBuilder b = new SimpleFeatureTypeBuilder();
         // set the name
         b.setName("UBAStation");
@@ -114,7 +114,7 @@ public class ObservationDeserializer extends JsonDeserializer<Observation> {
         return builder.buildFeature(stationID);
     }
 
-    private boolean isNumeric(String s) {
+    private static boolean isNumeric(String s) {
         return java.util.regex.Pattern.matches("\\d+", s);
     }
 

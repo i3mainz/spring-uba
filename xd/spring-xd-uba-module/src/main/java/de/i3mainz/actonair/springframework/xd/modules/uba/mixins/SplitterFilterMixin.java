@@ -7,11 +7,9 @@ import org.springframework.xd.module.options.spi.ProfileNamesProvider;
 
 public class SplitterFilterMixin implements ProfileNamesProvider {
 
-    private static final String[] USE_SPLITTER_FILTER = new String[] {
-            "use-splitter", "use-filter" };
+    private static final String[] USE_SPLITTER_FILTER = new String[] { "use-splitter", "use-filter" };
     private static final String[] DONT_USE_SPLITTER = new String[] { "dont-use-splitter" };
-    private static final String[] USE_SPLITTER_NOFILTER = new String[] {
-            "use-splitter", "dont-use-filter" };
+    private static final String[] USE_SPLITTER_NOFILTER = new String[] { "use-splitter", "dont-use-filter" };
 
     private boolean split = true;
     private String filter;
@@ -26,8 +24,7 @@ public class SplitterFilterMixin implements ProfileNamesProvider {
 
     @Override
     public String[] profilesToActivate() {
-        return split ? !isNullOrEmpty(filter) ? USE_SPLITTER_FILTER
-                : USE_SPLITTER_NOFILTER : DONT_USE_SPLITTER;
+        return split ? !isNullOrEmpty(filter) ? USE_SPLITTER_FILTER : USE_SPLITTER_NOFILTER : DONT_USE_SPLITTER;
     }
 
     public boolean isSplit() {
@@ -48,7 +45,7 @@ public class SplitterFilterMixin implements ProfileNamesProvider {
         return filter;
     }
 
-    private boolean isNullOrEmpty(String value) {
+    private static boolean isNullOrEmpty(String value) {
         return value == null || value.isEmpty();
     }
 }

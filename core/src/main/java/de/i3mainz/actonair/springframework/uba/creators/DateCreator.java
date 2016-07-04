@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DateCreator {
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(DateCreator.class);
 
     public ZonedDateTime create(Object measurementStamp) {
@@ -43,7 +43,7 @@ public class DateCreator {
      * @param timeStamp
      * @return
      */
-    private ZonedDateTime createDateTimeFromString(Object measurementStamp, LocalDateTime now) {        
+    private static ZonedDateTime createDateTimeFromString(Object measurementStamp, LocalDateTime now) {
         LocalDateTime timeStamp;
         String pattern = "(\\+|\\-)(\\d+)(H|D)$";
         Pattern r = Pattern.compile(pattern);
@@ -67,11 +67,11 @@ public class DateCreator {
      * @param now
      * @return
      */
-    private ZonedDateTime createZonedDateTime(LocalDateTime now) {
+    private static ZonedDateTime createZonedDateTime(LocalDateTime now) {
         return ZonedDateTime.of(resetTime(now), ZoneId.of("Europe/Berlin"));
     }
 
-    private LocalDateTime resetTime(LocalDateTime timeStamp) {
+    private static LocalDateTime resetTime(LocalDateTime timeStamp) {
         return timeStamp.withMinute(0).withSecond(0).withNano(0);
     }
 

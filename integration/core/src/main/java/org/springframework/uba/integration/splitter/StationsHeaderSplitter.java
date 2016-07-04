@@ -14,17 +14,10 @@ import org.springframework.messaging.support.MessageBuilder;
  */
 public class StationsHeaderSplitter {
 
+    @SuppressWarnings("unchecked")
     @Splitter
-    public List<Message<?>> split(Message<?> message) {
-//        List<Message<?>> result = new ArrayList<>();
-//        MessageBuilder<?> builder = MessageBuilder.fromMessage(message);
-//        Iterator<String> itr = ((List<String>) message.getHeaders().get("station")).iterator();
-//        while (itr.hasNext()) {
-//            builder.setHeader("station", itr.next());
-//            result.add(builder.build());
-//        }
-//        return result;
-        return ((Collection<Message<?>>) message.getHeaders().get("station")).stream()
+    public List<Message<? extends Object>> split(Message<?> message) {
+        return ((Collection<Message<? extends Object>>) message.getHeaders().get("station")).stream()
                 .map(s -> MessageBuilder.fromMessage(message).setHeader("station", s).build())
                 .collect(Collectors.toList());
     }
