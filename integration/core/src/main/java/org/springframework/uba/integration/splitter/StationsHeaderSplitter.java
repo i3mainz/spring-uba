@@ -22,9 +22,9 @@ public class StationsHeaderSplitter {
                 .collect(Collectors.toList());
     }
 
-    private Message<?> createMessage(Message<?> message, String station) {
-        Message<?> tmp = MessageBuilder.fromMessage(message)
+    private static Message<?> createMessage(Message<?> message,
+            String station) {
+        return MessageBuilder.fromMessage(message)
                 .setHeader("filteredStation", station).build();
-        return tmp;
     }
 }
