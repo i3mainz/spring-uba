@@ -48,21 +48,23 @@ public class ObservationDeserializer extends JsonDeserializer<Observation> {
         Observation observation = new Observation();
 
         String stationID = node.get("stationCode").asText();
-        String title = HtmlUtils.htmlUnescape(node.get("title").asText().replaceAll(stationID, "").trim());
+        String title = HtmlUtils.htmlUnescape(
+                node.get("title").asText().replaceAll(stationID, "").trim());
         String[] valStringArray = node.get("val").asText().split(" ");
 
         String state = node.get("state").asText();
         double lat = node.get("lat").asDouble();
         double lon = node.get("lon").asDouble();
-
+        
         if (valStringArray.length == 0 || !isNumeric(valStringArray[0])) {
             throw new JsonMappingException("Cannot load value");
         }
 
-        int value = Integer.parseInt(valStringArray[0]);
+        double value = Double.parseDouble(valStringArray[0]);
         observation.setStationId(stationID);
 
-        observation.setPosition(createGeoJSON(stationID, title, state, lat, lon));
+        observation
+                .setPosition(createGeoJSON(stationID, title, state, lat, lon));
         observation.setValue(value);
 
         return observation;
@@ -76,12 +78,13 @@ public class ObservationDeserializer extends JsonDeserializer<Observation> {
      * @param lon
      * @throws IOException
      */
-    private String createGeoJSON(String stationID, String title, String state, double lat, double lon)
-            throws IOException {
+    private String createGeoJSON(String stationID, String title, String state,
+            double lat, double lon) throws IOException {
 
         FeatureJSON fjson = new FeatureJSON();
         StringWriter writer = new StringWriter();
-        SimpleFeature feature = this.buildFeature(stationID, title, state, lat, lon);
+        SimpleFeature feature = this.buildFeature(stationID, title, state, lat,
+                lon);
         fjson.writeFeature(feature, writer);
         return writer.toString();
     }
@@ -104,9 +107,11 @@ public class ObservationDeserializer extends JsonDeserializer<Observation> {
         return b.buildFeatureType();
     }
 
-    private SimpleFeature buildFeature(String stationID, String title, String state, double lat, double lon) {
+    private SimpleFeature buildFeature(String stationID, String title,
+            String state, double lat, double lon) {
 
-        GeometryBuilder pointBuilder = new GeometryBuilder(new GeometryFactory(new PrecisionModel(), 4326));
+        GeometryBuilder pointBuilder = new GeometryBuilder(
+                new GeometryFactory(new PrecisionModel(), 4326));
         builder.add(stationID);
         builder.add(title);
         builder.add(state);
@@ -115,7 +120,7 @@ public class ObservationDeserializer extends JsonDeserializer<Observation> {
     }
 
     private static boolean isNumeric(String s) {
-        return java.util.regex.Pattern.matches("\\d+", s);
+        return s.matches("[-+]?\\d*\\.?\\d+");
     }
 
 }

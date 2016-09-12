@@ -23,7 +23,7 @@ public class Observation implements Serializable {
     private String stationId;
     private Date datum;
     private String position;
-    private int value;
+    private double value;
     
     /**
      * @return the stationId
@@ -64,13 +64,13 @@ public class Observation implements Serializable {
     /**
      * @return the value
      */
-    public final int getValue() {
+    public final double getValue() {
         return value;
     }
     /**
      * @param value the value to set
      */
-    public final void setValue(int value) {
+    public final void setValue(double value) {
         this.value = value;
     }
 }

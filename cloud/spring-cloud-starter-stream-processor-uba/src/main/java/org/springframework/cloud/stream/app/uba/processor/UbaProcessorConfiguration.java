@@ -68,7 +68,7 @@ public class UbaProcessorConfiguration {
                                 "headers['observationtime'].format(T(java.time.format.DateTimeFormatter).ofPattern('yyyyMMdd'))")
                 .uriVariable("hour",
                         "headers['observationtime'].format(T(java.time.format.DateTimeFormatter).ofPattern('HH'))")
-                .uriVariable("station", "headers['station']"))
+                .uriVariable("station", "headers['filteredStation']"))
                 .enrichHeaders(h -> h.header("pollutant", properties.getPollutant()).header("valueType",
                         properties.getValueType()))
                 .transform(transformer).transform(Transformers.toJson())
@@ -112,6 +112,12 @@ public class UbaProcessorConfiguration {
     public StationHeaderEnricher stationEnricher(UBAStationsDataStore ds) throws IOException {
         return new StationHeaderEnricher(ds);
     }
+    
+    @Bean
+    @ConditionalOnProperty(name = "ubasensors.filterStations", havingValue = "true")
+    public StationsHeaderSplitter stationsSplitter(){
+        return new StationsHeaderSplitter();
+    }
 
     @Bean
     @ConditionalOnProperty(name = "ubasensors.filterStations", havingValue = "true")
@@ -119,7 +125,7 @@ public class UbaProcessorConfiguration {
         return IntegrationFlows.from(dateenrich())
                 .enrichHeaders(h -> h.headerExpression("station",
                         "@stationEnricher.addStations(" + properties.getStationFilter() + ")"))
-                .split(new StationsHeaderSplitter()).channel(stationsChannel()).get();
+                .split(stationsSplitter()).channel(stationsChannel()).get();
     }
 
     @Bean

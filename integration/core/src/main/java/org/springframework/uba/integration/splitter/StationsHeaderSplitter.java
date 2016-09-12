@@ -17,9 +17,14 @@ public class StationsHeaderSplitter {
     @SuppressWarnings("unchecked")
     @Splitter
     public List<Message<? extends Object>> split(Message<?> message) {
-        return ((Collection<Message<? extends Object>>) message.getHeaders().get("station")).stream()
-                .map(s -> MessageBuilder.fromMessage(message).setHeader("station", s).build())
+        return ((Collection<String>) message.getHeaders().get("station"))
+                .stream().map(s -> createMessage(message, s))
                 .collect(Collectors.toList());
     }
 
+    private Message<?> createMessage(Message<?> message, String station) {
+        Message<?> tmp = MessageBuilder.fromMessage(message)
+                .setHeader("filteredStation", station).build();
+        return tmp;
+    }
 }
