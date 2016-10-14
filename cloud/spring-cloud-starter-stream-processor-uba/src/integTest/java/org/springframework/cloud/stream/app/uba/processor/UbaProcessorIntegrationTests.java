@@ -3,6 +3,8 @@
  */
 package org.springframework.cloud.stream.app.uba.processor;
 
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -23,16 +25,13 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.stream.annotation.Bindings;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.cloud.stream.test.binder.MessageCollector;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,10 +46,8 @@ import de.i3mainz.actonair.springframework.uba.model.Observation;
  * @author Nikolai Bock
  *
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = UbaProcessorIntegrationTests.UBAProcessorApplication.class)
-@IntegrationTest({ "server.port=-1" })
-@DirtiesContext
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = UbaProcessorIntegrationTests.UBAProcessorApplication.class, webEnvironment = RANDOM_PORT)
 public abstract class UbaProcessorIntegrationTests {
 
     @Autowired
@@ -86,7 +83,7 @@ public abstract class UbaProcessorIntegrationTests {
     protected SimpleDateFormat df = new SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss.SSS");
 
-    @WebIntegrationTest({ "ubasensors.measurementStamp='-1D'",
+    @SpringBootTest({ "ubasensors.measurementStamp='-1D'",
             "ubasensors.filterStations=false" })
     public static class TestUBAStandardRequest
             extends UbaProcessorIntegrationTests {
@@ -102,7 +99,7 @@ public abstract class UbaProcessorIntegrationTests {
         }
     }
 
-    @WebIntegrationTest({
+    @SpringBootTest({
             "ubasensors.measurementStamp=new java.text.SimpleDateFormat(\"yyyy-MM-dd HH:mm:ss.S\").parse('2016-08-23 12:00:00.0')",
             "ubasensors.filterStations=true",
             "ubasensors.stationFilter=new double[]{8.2352354,49.99923434,0.05}",
@@ -124,7 +121,7 @@ public abstract class UbaProcessorIntegrationTests {
         }
     }
 
-    @WebIntegrationTest({
+    @SpringBootTest({
             "ubasensors.measurementStamp=new java.text.SimpleDateFormat(\"yyyy-MM-dd HH:mm:ss.S\").parse(payload.time)",
             "ubasensors.filterStations=true",
             "ubasensors.stationFilter=new double[]{new Double(payload.longitude),new Double(payload.latitude),0.05}",
@@ -156,7 +153,7 @@ public abstract class UbaProcessorIntegrationTests {
         }
     }
 
-    @WebIntegrationTest({
+    @SpringBootTest({
             "ubasensors.measurementStamp=new java.text.SimpleDateFormat(\"yyyy-MM-ddHH:mm:ss.S\").parse(payload.time)",
             "ubasensors.filterStations=true",
             "ubasensors.stationFilter=new double[]{new Double(payload.longitude),new Double(payload.latitude),0.05}",
@@ -186,7 +183,7 @@ public abstract class UbaProcessorIntegrationTests {
         }
     }
 
-    @WebIntegrationTest({
+    @SpringBootTest({
             "ubasensors.measurementStamp=new java.text.SimpleDateFormat(\"yyyy-MM-dd HH:mm:ss.S\").parse(payload.time)",
             "ubasensors.filterStations=true",
             "ubasensors.stationFilter=new double[]{new Double(payload.longitude),new Double(payload.latitude),0.05}",
@@ -218,7 +215,7 @@ public abstract class UbaProcessorIntegrationTests {
 
     }
 
-    @WebIntegrationTest({
+    @SpringBootTest({
             "ubasensors.measurementStamp=new java.text.SimpleDateFormat(\"yyyy-MM-dd HH:mm:ss.S\").parse(payload.time)",
             "ubasensors.filterStations=true",
             "ubasensors.stationFilter=new double[]{new Double(payload.longitude),new Double(payload.latitude),0.05}",
