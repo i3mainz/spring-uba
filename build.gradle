@@ -1,0 +1,43 @@
+plugins {
+    id "org.sonarqube" version "2.2-rc2"
+    id "io.spring.dependency-management" version "0.6.0.RELEASE" apply false
+    id "org.unbroken-dome.test-sets" version "1.2.0" apply false
+}
+
+description = 'Parent Project for UBA services'
+group = group
+version = version
+
+def javaProjects() { 
+  return subprojects.findAll { new File(it.projectDir, "src").exists() }
+} 
+
+configure(javaProjects()) {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
+    apply from: "${rootProject.projectDir}/maven.gradle"
+    
+    sourceCompatibility = 1.8
+	targetCompatibility = 1.8
+
+    repositories {
+        maven { url 'http://download.osgeo.org/webdav/geotools/' }
+        maven { url "http://repo.spring.io/release" }
+        jcenter()
+        maven { url "http://repo.spring.io/snapshot" }
+        maven { url "http://repo.spring.io/milestone" }
+        maven { url 'http://repo.boundlessgeo.com/main' }
+        mavenCentral()
+    }
+
+    group = group
+	version = version
+
+    jar { manifest.attributes provider: 'i3mainz' }
+}
+
+task wrapper(type: Wrapper) {
+    description = 'Generates gradlew[.bat] scripts'
+    gradleVersion = '3.0'
+}
