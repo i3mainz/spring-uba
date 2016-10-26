@@ -4,11 +4,15 @@ include ":spring-uba-core"
 include ":spring-uba-integration-core"
 include ":spring-xd-uba-module"
 include ":spring-cloud-starter-stream-processor-uba"
+include ":uba-processor-kafka"
+include ":uba-processor-rabbit"
 
 project(':spring-uba-core').projectDir = new File(settingsDir, 'core')
 project(':spring-uba-integration-core').projectDir = new File(settingsDir, 'integration/core')
 project(':spring-xd-uba-module').projectDir = new File(settingsDir, 'xd/spring-xd-uba-module')
 project(':spring-cloud-starter-stream-processor-uba').projectDir = new File(settingsDir, 'cloud/starter/processor')
+project(':uba-processor-kafka').projectDir = new File(settingsDir, 'cloud/apps/kafka/processor')
+project(':uba-processor-rabbit').projectDir = new File(settingsDir, 'cloud/apps/rabbit/processor')
 
 
 
