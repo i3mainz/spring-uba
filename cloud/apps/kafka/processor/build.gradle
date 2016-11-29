@@ -21,6 +21,6 @@ dependencies {
 dependencyManagement {
 	imports { 
 		mavenBom "org.springframework.cloud:spring-cloud-starter-parent:${springCloudVersion}"
-		mavenBom "org.springframework.cloud.stream.app:spring-cloud-stream-app-dependencies:${springCloudStreamVersion}"
+		mavenBom "org.springframework.cloud.stream.app:app-starters-core-dependencies:${springCloudStreamVersion}"
 	}
 }
