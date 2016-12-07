@@ -1,6 +1,6 @@
 plugins {
-    id "org.sonarqube" version "2.2-rc2"
-    id "io.spring.dependency-management" version "0.6.0.RELEASE" apply false
+    id "org.sonarqube" version "2.2.1"
+    id "io.spring.dependency-management" version "0.6.1.RELEASE" apply false
     id "org.unbroken-dome.test-sets" version "1.2.0" apply false
 }
 
@@ -39,5 +39,5 @@ configure(javaProjects()) {
 
 task wrapper(type: Wrapper) {
     description = 'Generates gradlew[.bat] scripts'
-    gradleVersion = '3.1'
+    gradleVersion = '3.2.1'
 }
